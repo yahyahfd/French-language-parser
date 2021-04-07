@@ -1,8 +1,20 @@
+#!/usr/bin/env python3
+# dans une phrase simple, les mots sont séparés par des espaces: On cherche à séparer ces termes et à les mettre dans une liste
+# le premier séparateur est l'espace, le deuxième est la virgule et autres ponctuations (collés aux termes), le troisième est l'apostrophe comme dans "l'espace".
+import re
+
+def parse_ligne(text):
+    l = re.split(" |! |, |: |\? |\. |; |\.\.\. |\"|\'|\(|\)|!|,|:|\?|\.|;|\.\.\.",text)
+    while("" in l) :
+        l.remove("")
+    
+    return l
+    '''for x in range(len(l)):
+        print(l[x])'''
+
+test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et bien c'est très simple: chaque mot; doit apparaitre seul...")
 
 punc = '.;:,?!"\')('
-
-def parse_espace(ligne: str):
-    tab = str.split(' ')
 
 def init_dico(tab):
     dico = dict
@@ -30,3 +42,4 @@ def parse_dict(tab):
                 dico = comp_terminaison(dico, treatment, mot)
                 nopunc = mot.strip(punc)
                 dico = comp_terminaison(dico, treatment, nopunc)
+
