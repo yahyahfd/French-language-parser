@@ -14,7 +14,7 @@ def parse_ligne(text):
 
 test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et bien c'est très simple: chaque mot; doit apparaitre seul...")
 
-punc = '.;:,?!"\')('
+#punc = '.;:,?!"\')('
 
 def init_dico(tab):
     dico = dict
@@ -40,6 +40,6 @@ def parse_dict(tab):
             for mot in tab:
                 treatment = line.rstrip()
                 dico = comp_terminaison(dico, treatment, mot)
-                nopunc = mot.strip(punc)
-                dico = comp_terminaison(dico, treatment, nopunc)
+                '''nopunc = mot.strip(punc)
+                dico = comp_terminaison(dico, treatment, nopunc)'''
 
