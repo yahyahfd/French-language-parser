@@ -23,7 +23,8 @@ def init_dico(tab):
     return dico
 
 def comp_dico(dico, treatment, mot):
-    #if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
+    #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
+    #Pour comprendre pourquoi treatment[-1] est ajouté, regarder le pdf sur lefff
     if treatment[0] == mot:
         dico[mot] = 'verbe' + ' ' + treatment[-1]
     
