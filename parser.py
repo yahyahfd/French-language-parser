@@ -9,8 +9,6 @@ def parse_ligne(text):
         l.remove("")
     
     return l
-    '''for x in range(len(l)):
-        print(l[x])'''
 
 test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et bien c'est très simple: chaque mot; doit apparaitre seul...")
 
@@ -19,7 +17,7 @@ test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et 
 def init_dico(tab):
     dico = dict
     for mot in tab:
-        dico[mot] = "nom"
+        dico[mot] = 'nom'
     return dico
 
 
