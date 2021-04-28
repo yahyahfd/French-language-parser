@@ -17,7 +17,7 @@ test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et 
 def init_dico(tab):
     dico = dict
     for mot in tab:
-        dico[mot] = 'nom'
+        dico[mot] = 'Nom'
     return dico
 
 
