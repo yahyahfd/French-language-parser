@@ -1,12 +1,14 @@
 import parser
 
+
 def comp_dico(dico, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
     #Pour comprendre pourquoi treatment[-1] est ajouté, regarder le pdf sur lefff
     if treatment[0] == mot:
-        dico[mot] = 'verbe' + ' ' + treatment[-1]
+        dico[mot] = 'Verbe' + ' ' + treatment[-1]
     
     return dico
+
 
 def search_verbe(tab):
     dico_key = tab
@@ -26,6 +28,7 @@ def search_verbe(tab):
     
     return dico_key
 
+
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
@@ -35,6 +38,7 @@ def append_premiere(piste_sujet, v):
     
     return piste_sujet
 
+
 def append_deuxieme(piste_sujet, v):
     if '2' in v:
         if 's' in v:
@@ -43,6 +47,7 @@ def append_deuxieme(piste_sujet, v):
             piste_sujet.append('vous')
     
     return piste_sujet
+
 
 def append_troisieme(piste_sujet, v):
     if '3' in v:
@@ -62,7 +67,7 @@ def append_troisieme(piste_sujet, v):
 def traitement_forme_verbale(dico_key):
     piste_sujet = []
     for (k, v) in dico_key.items():
-        if v == 'nom':
+        if v == 'Nom':
             continue
         
         piste_sujet = append_premiere(piste_sujet, v)
@@ -72,4 +77,36 @@ def traitement_forme_verbale(dico_key):
         piste_sujet = append_troisieme(piste_sujet, v)
 
     return piste_sujet
+
+
+def search_nom_propre(dico_key):
+    i = 0
+    for mot, categorie in dico_key.items():
+        if mot[0].isupper() and i == 0:
+            dico_key[mot] = 'Début de phrase, possible sujet nom propre'
+            i = i + 1
+            continue 
         
+        if 'Verbe' in categorie:
+            break
+
+        if mot[0].isupper():
+            dico_key[mot] = 'Nom propre sujet'
+    
+    return dico_key
+
+
+def search_sujet(dico_key, piste_sujet):
+    for pronom in piste_sujet:   
+        if pronom == '3s':
+            dico_key = search_nom_propre(dico_key)
+            continue
+        
+        for mot, categorie in dico_key.items(): 
+            if 'Verbe' not in categorie:
+                if mot.lower() == pronom:
+                    dico_key[mot] = 'Sujet'
+            else:
+                break
+    
+    return dico_key
