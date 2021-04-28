@@ -19,7 +19,7 @@ def parse_dict(tab):
         else:
             #itération du dict (phrase en input splitted via ' ')
             for mot in tab:
-                treatment = parse_ligne(line.rstrip())
+                treatment = parser.parse_ligne(line.rstrip())
                 dico = comp_dico(dico, treatment, mot)
                 '''nopunc = mot.strip(punc)
                 dico = comp_terminaison(dico, treatment, nopunc)'''
