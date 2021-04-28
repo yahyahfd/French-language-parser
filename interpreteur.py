@@ -1,13 +1,13 @@
 import parser
 
 
-def comp_dico(dico, treatment, mot):
+def comp_dico(dico_key, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
     #Pour comprendre pourquoi treatment[-1] est ajouté, regarder le pdf sur lefff
     if treatment[0] == mot:
-        dico[mot] = 'Verbe' + ' ' + treatment[-1]
+        dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
     
-    return dico
+    return dico_key
 
 
 def search_verbe(tab):
