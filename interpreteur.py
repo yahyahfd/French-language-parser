@@ -16,12 +16,12 @@ def search_verbe(tab):
 
     #itération du fichier conjugaison (terminaisons des verbes)
     for line in fd_dico:
-        if '#' in line or '-' in line or line == '':
+        if '#' in line or line == '':
             continue
         else:
             #itération du dict (phrase en input splitted via ' ')
-            for mot in tab:
-                treatment = parser.parse_ligne(line.rstrip())
+            for mot, categorie in dico_key.items():
+                treatment = line.rstrip().split('\t')
                 dico_key = comp_dico(dico_key, treatment, mot)
                 '''nopunc = mot.strip(punc)
                 dico = comp_terminaison(dico, treatment, nopunc)'''
@@ -82,7 +82,7 @@ def traitement_forme_verbale(dico_key):
 def search_nom_propre(dico_key):
     i = 0
     for mot, categorie in dico_key.items():
-        if mot[0].isupper() and i == 0:
+        if i == 0 and mot[0].isupper():
             dico_key[mot] = 'Début de phrase, possible sujet nom propre'
             i = i + 1
             continue 
