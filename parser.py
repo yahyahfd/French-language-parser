@@ -9,17 +9,15 @@ def parse_ligne(text):
         l.remove("")
     
     return l
-    '''for x in range(len(l)):
-        print(l[x])'''
 
 test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et bien c'est très simple: chaque mot; doit apparaitre seul...")
 
 #punc = '.;:,?!"\')('
 
 def init_dico(tab):
-    dico = dict
+    dico = {}
     for mot in tab:
-        dico[mot] = "nom"
+        dico[mot] = 'Nom'
     return dico
 
 
