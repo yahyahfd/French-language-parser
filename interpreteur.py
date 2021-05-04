@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 import parser
+import re
 
 
 def comp_dico(dico_key, treatment, mot):
@@ -27,6 +29,26 @@ def search_verbe(tab):
                 dico = comp_terminaison(dico, treatment, nopunc)'''
     
     return dico_key
+
+
+# On ne traite pas des paragraphes ici: text est une phrase, et donc le "?" est le dernier caractère
+def is_question(text):
+    '''res = re.split(' |\? |\?',text)
+    while('' in res) :
+        res.remove('')'''
+    res = parser.parse_ligne(text)
+    for a in res:
+        if '-' in a:
+            if '-t-' in a:
+                return a[a.find('-t-')+3:]
+            else:
+                return a[a.find('-')+1:]
+    
+    return None
+
+#dé-commenter pour le test
+#print(is_question('Que voulez-vous?'))
+#print(is_question('A-t-il un stylo sur lui?'))
 
 
 def append_premiere(piste_sujet, v):
