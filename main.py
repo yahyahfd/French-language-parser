@@ -3,7 +3,10 @@ import interpreteur
 
 def print_dico(dico):
     for k, v in dico.items():
-        print(k + ' ' + v)
+        if 'Verbe' in v:
+            print(k + ' ' + v.split(' ')[0])
+        else:
+            print(k + ' ' + v)
 
 def adapte_tirets(tab):
     res = []
@@ -50,5 +53,6 @@ if __name__ == "__main__":
         piste_sujet = interpreteur.traitement_forme_verbale(find_verb)
 
         res = interpreteur.search_sujet(find_verb, piste_sujet)
+        res = interpreteur.lever_ambiguite_det(res)
 
         print_dico(res)
