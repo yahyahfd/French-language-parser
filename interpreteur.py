@@ -40,9 +40,9 @@ def is_question(text):
     for a in res:
         if '-' in a:
             if '-t-' in a:
-                return a[a.find('-t-')+3:]
+                return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                return a[a.find('-')+1:]
+                return (a[0:a.find('-')], a[a.find('-')+1:])
     
     return None
 
