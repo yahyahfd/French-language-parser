@@ -3,7 +3,7 @@ import interpreteur
 
 def print_dico(dico):
     for k, v in dico.items():
-        if 'Verbe' in v:
+        if 'Verbe' in v and v != 'Verbe Infinitif':
             print(k + ' ' + v.split(' ')[0])
         else:
             print(k + ' ' + v)
