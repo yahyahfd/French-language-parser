@@ -7,7 +7,7 @@ balise_3s = '3s'
 
 def comp_dico(dico_key, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
-    #Pour comprendre pourquoi treatment[-1] est ajouté, regarder le pdf sur lefff
+    #Pour comprendre comment treatment[-1] est utilisé, regarder le pdf sur lefff
     if treatment[0] == mot:
         if 'W' in treatment[-1]:
             dico_key[mot] = 'Verbe Infinitif'
@@ -51,18 +51,12 @@ def is_question(text):
     
     return None
 
-#dé-commenter pour le test
-#print(is_question('Que voulez-vous?'))
-#print(is_question('A-t-il un stylo sur lui?'))
-
-
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
             piste_sujet.append('je')
         elif 'p' in v:
             piste_sujet.append('nous')
-    
     return piste_sujet
 
 
@@ -82,8 +76,9 @@ def append_troisieme(piste_sujet, v):
             piste_sujet.append('il')
             piste_sujet.append('elle')
             piste_sujet.append('on')
-            piste_sujet.append(piste_sujet[0])
-            piste_sujet[0] = balise_3s
+            if piste_sujet[0] != balise_3s:
+                piste_sujet.append(piste_sujet[0])
+                piste_sujet[0] = balise_3s
         elif 'p' in v:
             piste_sujet.append('ils')
             piste_sujet.append('elles')
@@ -126,11 +121,11 @@ def search_sujet(dico_key, piste_sujet):
             continue
         
         for mot, categorie in dico_key.items(): 
-            if 'Verbe' not in categorie:
-                if mot.lower() == pronom:
-                    dico_key[mot] = 'Sujet'
-            else:
-                break
+            #if 'Verbe' not in categorie:
+            if mot.lower() == pronom:
+                dico_key[mot] = 'Sujet'
+            #else:
+            #    break
     
     return dico_key
 
@@ -140,7 +135,7 @@ def lever_ambiguite_det(dico_key):
 
     for determinant in fd:
         for mot, categorie in dico_key.items(): 
-            if 'Verbe' in categorie and was:
+            if 'Verbe' in categorie and was and categorie != 'Verbe Infinitif':
                 dico_key[mot] = 'Nom'
             
             was = False

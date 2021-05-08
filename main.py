@@ -34,7 +34,7 @@ def cas_question(phrase, tab):
             elif (len(res) == 2 and parcourt == 1) or (len(res) == 3 and parcourt == 2):
                 parsing[mot] = 'Sujet'
             else:
-                parsing[mot] = 'Déterminant'
+                parsing[mot] = 'Pronom'
             parcourt = parcourt + 1
     
     parsing['?'] = 'Ponctuation'
