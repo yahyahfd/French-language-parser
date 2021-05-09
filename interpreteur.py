@@ -11,6 +11,8 @@ def comp_dico(dico_key, treatment, mot):
     if treatment[0] == mot:
         if 'W' in treatment[-1]:
             dico_key[mot] = 'Verbe Infinitif'
+        elif 'Verbe' in dico_key[mot]:
+            dico_key[mot] = dico_key[mot] + treatment[-1]
         else:
             dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
     
@@ -115,6 +117,7 @@ def search_sujet_nom_propre(dico_key):
 
 
 def search_sujet(dico_key, piste_sujet):
+    piste_sujet = list(set(piste_sujet))
     for pronom in piste_sujet:   
         if pronom == balise_3s:
             dico_key = search_sujet_nom_propre(dico_key)
