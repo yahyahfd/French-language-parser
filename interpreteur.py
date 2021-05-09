@@ -132,6 +132,18 @@ def search_sujet(dico_key, piste_sujet):
     
     return dico_key
 
+def search_nom_propre(dico_key):
+    premier_mot = True
+    for mot, categorie in dico_key.items():
+        if premier_mot:
+            premier_mot = False
+            continue
+        
+        if categorie == 'Nom' and mot[0].isupper():
+            dico_key[mot] = 'Nom Propre'
+
+    return dico_key
+
 def lever_ambiguite_det(dico_key):
     fd = open('determinants.txt')
     was = False

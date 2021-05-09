@@ -54,5 +54,6 @@ if __name__ == "__main__":
 
         res = interpreteur.search_sujet(find_verb, piste_sujet)
         res = interpreteur.lever_ambiguite_det(res)
-
+        res = interpreteur.search_nom_propre(res)
+        
         print_dico(res)
