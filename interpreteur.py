@@ -108,8 +108,10 @@ def search_sujet_nom_propre(dico_key):
     for mot, categorie in dico_key.items():
         tab_stock.append((mot, categorie))
 
-    for i in range(len(tab_stock)):
+    for i in range(1, len(tab_stock)):
         #s3 est une convention du dictionnaire lefff pour indiquer un verbe à la 3ème personne singulier
+        #un mot est un Nom propre sujet s'il est suivit d'un verbe à la 3ème personne du singulier
+        #et s'il possède une majuscule
         if 'Verbe' in tab_stock[i][1] and tab_stock[i-1][0][0].isupper() and 's3' in tab_stock[i][1]:
             dico_key[tab_stock[i-1][0]] = 'Nom propre sujet'
     
