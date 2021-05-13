@@ -2,12 +2,19 @@
 import parser
 import re
 
+#Balise pour détecter lorsque qu'un verbe est conjugué à la 3ème personne du singulier 
+balise_3s = '3s'
 
 def comp_dico(dico_key, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
-    #Pour comprendre pourquoi treatment[-1] est ajouté, regarder le pdf sur lefff
+    #Pour comprendre comment treatment[-1] est utilisé, regarder le pdf sur lefff
     if treatment[0] == mot:
-        dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
+        if 'W' in treatment[-1]:
+            dico_key[mot] = 'Verbe Infinitif'
+        elif 'Verbe' in dico_key[mot]:
+            dico_key[mot] = dico_key[mot] + treatment[-1]
+        else:
+            dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
     
     return dico_key
 
@@ -40,16 +47,11 @@ def is_question(text):
     for a in res:
         if '-' in a:
             if '-t-' in a:
-                return a[a.find('-t-')+3:]
+                return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                return a[a.find('-')+1:]
+                return (a[0:a.find('-')], a[a.find('-')+1:])
     
     return None
-
-#dé-commenter pour le test
-#print(is_question('Que voulez-vous?'))
-#print(is_question('A-t-il un stylo sur lui?'))
-
 
 def append_premiere(piste_sujet, v):
     if '1' in v:
@@ -57,7 +59,6 @@ def append_premiere(piste_sujet, v):
             piste_sujet.append('je')
         elif 'p' in v:
             piste_sujet.append('nous')
-    
     return piste_sujet
 
 
@@ -77,8 +78,9 @@ def append_troisieme(piste_sujet, v):
             piste_sujet.append('il')
             piste_sujet.append('elle')
             piste_sujet.append('on')
-            piste_sujet.append(piste_sujet[0])
-            piste_sujet[0] = '3s'
+            if piste_sujet[0] != balise_3s:
+                piste_sujet.append(piste_sujet[0])
+                piste_sujet[0] = balise_3s
         elif 'p' in v:
             piste_sujet.append('ils')
             piste_sujet.append('elles')
@@ -101,34 +103,60 @@ def traitement_forme_verbale(dico_key):
     return piste_sujet
 
 
-def search_nom_propre(dico_key):
-    i = 0
+def search_sujet_nom_propre(dico_key):
+    tab_stock = []
     for mot, categorie in dico_key.items():
-        if i == 0 and mot[0].isupper():
-            dico_key[mot] = 'Début de phrase, possible sujet nom propre'
-            i = i + 1
-            continue 
-        
-        if 'Verbe' in categorie:
-            break
+        tab_stock.append((mot, categorie))
 
-        if mot[0].isupper():
-            dico_key[mot] = 'Nom propre sujet'
+    for i in range(len(tab_stock)):
+        #s3 est une convention du dictionnaire lefff pour indiquer un verbe à la 3ème personne singulier
+        if 'Verbe' in tab_stock[i][1] and tab_stock[i-1][0][0].isupper() and 's3' in tab_stock[i][1]:
+            dico_key[tab_stock[i-1][0]] = 'Nom propre sujet'
     
     return dico_key
 
 
 def search_sujet(dico_key, piste_sujet):
+    piste_sujet = list(set(piste_sujet))
     for pronom in piste_sujet:   
-        if pronom == '3s':
-            dico_key = search_nom_propre(dico_key)
+        if pronom == balise_3s:
+            dico_key = search_sujet_nom_propre(dico_key)
             continue
         
         for mot, categorie in dico_key.items(): 
-            if 'Verbe' not in categorie:
-                if mot.lower() == pronom:
-                    dico_key[mot] = 'Sujet'
-            else:
-                break
+            #if 'Verbe' not in categorie:
+            if mot.lower() == pronom:
+                dico_key[mot] = 'Sujet'
+            #else:
+            #    break
     
+    return dico_key
+
+def search_nom_propre(dico_key):
+    premier_mot = True
+    for mot, categorie in dico_key.items():
+        if premier_mot:
+            premier_mot = False
+            continue
+        
+        if categorie == 'Nom' and mot[0].isupper():
+            dico_key[mot] = 'Nom Propre'
+
+    return dico_key
+
+def lever_ambiguite_det(dico_key):
+    fd = open('determinants.txt')
+    was = False
+
+    for determinant in fd:
+        for mot, categorie in dico_key.items(): 
+            if 'Verbe' in categorie and was and categorie != 'Verbe Infinitif':
+                dico_key[mot] = 'Nom'
+            
+            was = False
+
+            if mot == determinant.rstrip():
+                dico_key[mot] = 'Déterminant'
+                was = True
+
     return dico_key
