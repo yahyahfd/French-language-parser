@@ -15,9 +15,9 @@ test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et 
 #punc = '.;:,?!"\')('
 
 def init_dico(tab):
-    dico = []
+    dico = {}
     for mot in tab:
-        dico.append((mot, 'Nom'))
+        dico[mot] = 'Nom'
     return dico
 
 
