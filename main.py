@@ -1,8 +1,8 @@
 import parser
 import interpreteur
 
-def print_dico(dico):
-    for k, v in dico.items():
+def print_dico_tuple(dico):
+    for (k, v) in dico:
         if 'Verbe' in v and v != 'Verbe Infinitif':
             print(k + ' ' + v.split(' ')[0])
         else:
@@ -27,18 +27,18 @@ def cas_question(phrase, tab):
     res = interpreteur.is_question(phrase)
 
     parcourt = 0
-    for mot, categorie in parsing.items():
-        if parcourt < len(res) and mot == res[parcourt]:
+    for i in range(len(parsing)):
+        if parcourt < len(res) and parsing[i][0] == res[parcourt]:
             if parcourt == 0:
-                parsing[mot] = 'Verbe'
+                parsing[i] = (parsing[i][0], 'Verbe')
             elif (len(res) == 2 and parcourt == 1) or (len(res) == 3 and parcourt == 2):
-                parsing[mot] = 'Sujet'
+                parsing[i] = (parsing[i][0], 'Sujet')
             else:
-                parsing[mot] = 'Pronom'
+                parsing[i] = (parsing[i][0], 'Pronom')
             parcourt = parcourt + 1
     
-    parsing['?'] = 'Ponctuation'
-    print_dico(parsing)
+    parsing.append(('?', 'Punctuation'))
+    print_dico_tuple(parsing)
 
 if __name__ == "__main__":
     phrase = input("Veuillez entrer une phrase à parser : ")
@@ -56,4 +56,4 @@ if __name__ == "__main__":
         res = interpreteur.lever_ambiguite_det(res)
         res = interpreteur.search_nom_propre(res)
         
-        print_dico(res)
+        print_dico_tuple(res)
