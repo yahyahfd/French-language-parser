@@ -18,7 +18,7 @@ def comp_dico(dico_tuple, treatment, mot):
     
     return None
 
-
+#recherche les verbes dans une phrase
 def search_verbe(tab):
     dico_tuple = tab
     fd_dico = open('lefff-verbs.txt')
@@ -41,10 +41,8 @@ def search_verbe(tab):
 
 
 # On ne traite pas des paragraphes ici: text est une phrase, et donc le "?" est le dernier caractère
+# Renvoie le verbe et le sujet dans une phrase intérrogative simple (simple = 1 verbe, sujet max)
 def is_question(text):
-    '''res = re.split(' |\? |\?',text)
-    while('' in res) :
-        res.remove('')'''
     res = parser.parse_ligne(text)
     for a in res:
         if '-' in a:
@@ -55,6 +53,8 @@ def is_question(text):
     
     return None
 
+
+# Prépare la recherche du sujet pour les 1eres personnes
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
@@ -64,6 +64,7 @@ def append_premiere(piste_sujet, v):
     return piste_sujet
 
 
+# Prépare la recherche du sujet pour les 2emes personnes
 def append_deuxieme(piste_sujet, v):
     if '2' in v:
         if 's' in v:
@@ -74,9 +75,11 @@ def append_deuxieme(piste_sujet, v):
     return piste_sujet
 
 
+# Prépare la recherche du sujet pour les 3emes personnes
 def append_troisieme(piste_sujet, v):
     if '3' in v:
         if 's' in v:
+            # cas spécial car le sujet peut être un nom propre ex : prénom
             piste_sujet.append('il')
             piste_sujet.append('elle')
             piste_sujet.append('on')
@@ -90,6 +93,7 @@ def append_troisieme(piste_sujet, v):
     return piste_sujet
 
 
+# prépare une liste des sujets potentiels de la phrase
 def traitement_forme_verbale(dico_tuple):
     piste_sujet = []
     for (k, v) in dico_tuple:
@@ -105,21 +109,19 @@ def traitement_forme_verbale(dico_tuple):
     return piste_sujet
 
 
+# recherche le/les sujets nom propre
 def search_sujet_nom_propre(dico_tuple):
-    '''tab_stock = []
-    for i in range(len(dico_tuple)):
-        tab_stock.append((mot, categorie))'''
-
     for i in range(1, len(dico_tuple)):
-        #s3 est une convention du dictionnaire lefff pour indiquer un verbe à la 3ème personne singulier
-        #un mot est un Nom propre sujet s'il est suivit d'un verbe à la 3ème personne du singulier
-        #et s'il possède une majuscule
+        # 's3' est une convention du dictionnaire lefff pour indiquer un verbe à la 3ème personne singulier
+        # un mot est un Nom propre sujet s'il est suivit d'un verbe à la 3ème personne du singulier
+        # et s'il possède une majuscule
         if 'Verbe' in dico_tuple[i][1] and dico_tuple[i-1][0][0].isupper() and 's3' in dico_tuple[i][1]:
             dico_tuple[i-1] = (dico_tuple[i-1][0], 'Nom propre sujet')
     
     return dico_tuple
 
 
+# recherche les sujets d'une phrase
 def search_sujet(dico_tuple, piste_sujet):
     piste_sujet = list(set(piste_sujet))
     for pronom in piste_sujet:   
@@ -128,14 +130,13 @@ def search_sujet(dico_tuple, piste_sujet):
             continue
         
         for i in range(len(dico_tuple)): 
-            #if 'Verbe' not in categorie:
             if dico_tuple[i][0].lower() == pronom:
                 dico_tuple[i] = (dico_tuple[i][0], 'Sujet')
-            #else:
-            #    break
     
     return dico_tuple
 
+
+# recherche les noms propres non sujets dans une phrase (attention omet les acronymes ex : B.B.C. ignoré)
 def search_nom_propre(dico_tuple):
     premier_mot = True
     for i in range(len(dico_tuple)):
@@ -148,8 +149,10 @@ def search_nom_propre(dico_tuple):
 
     return dico_tuple
 
+# Lève les ambiguités des verbes quand ils sont précédés par un déterminant
 def lever_ambiguite_det(dico_tuple):
     fd = open('determinants.txt')
+    # indique si le mot précédent était déterminant ou non
     etait_det = False
 
     for determinant in fd:

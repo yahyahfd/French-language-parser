@@ -1,12 +1,14 @@
 import parser
 import interpreteur
 
+# affiche le résultat de la représentation de la phrase
 def print_dico_tuple(dico):
     for (k, v) in dico:
         if 'Verbe' in v and v != 'Verbe Infinitif':
             print(k + ' ' + v.split(' ')[0])
         else:
             print(k + ' ' + v)
+
 
 def adapte_tirets(tab):
     res = []
@@ -20,6 +22,8 @@ def adapte_tirets(tab):
     
     return res
 
+# organise la représentation de la phrase pour les questions interrogatives 
+# (fonctionne uniquement sur les phrases simples)
 def cas_question(phrase, tab):
     decoupe = adapte_tirets(tab)
     parsing = parser.init_dico(decoupe)
@@ -28,6 +32,7 @@ def cas_question(phrase, tab):
 
     parcourt = 0
     for i in range(len(parsing)):
+        # cas - et -t- ex : voulez-vous... ou a-t-il...
         if parcourt < len(res) and parsing[i][0] == res[parcourt]:
             if parcourt == 0:
                 parsing[i] = (parsing[i][0], 'Verbe')
@@ -37,7 +42,7 @@ def cas_question(phrase, tab):
                 parsing[i] = (parsing[i][0], 'Pronom')
             parcourt = parcourt + 1
     
-    parsing.append(('?', 'Punctuation'))
+    parsing.append(('?', 'Ponctuation'))
     print_dico_tuple(parsing)
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ test = parse_ligne("Bonjour! Ceci est un test, bien sûr. (Comment) \"ça\"? Et 
 
 #punc = '.;:,?!"\')('
 
+# initialise le dico des tuples avec le placeholder Nom
 def init_dico(tab):
     dico = []
     for mot in tab:
