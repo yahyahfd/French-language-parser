@@ -2,7 +2,7 @@
 import parser
 import re
 
-#Balise pour détecter lorsque qu'un verbe est conjugué à la 3ème personne du singulier 
+#Balise pour détecter lorsque qu'un verbe est conjugué à la 3ème personne du singulier
 balise_3s = '3s'
 
 def comp_dico(dico_key, treatment, mot):
@@ -15,7 +15,7 @@ def comp_dico(dico_key, treatment, mot):
             dico_key[mot] = dico_key[mot] + treatment[-1]
         else:
             dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
-    
+
     return dico_key
 
 
@@ -34,7 +34,7 @@ def search_verbe(tab):
                 dico_key = comp_dico(dico_key, treatment, mot)
                 '''nopunc = mot.strip(punc)
                 dico = comp_terminaison(dico, treatment, nopunc)'''
-    
+
     return dico_key
 
 
@@ -44,15 +44,17 @@ def is_question(text):
     while('' in res) :
         res.remove('')'''
     res = parser.parse_ligne(text)
+    pronoms = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
     for a in res:
         if '-' in a:
             if '-t-' in a:
-                return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
+                if((a[a.find('-t-')+3:]).lower() in pronoms):
+                    return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                return (a[0:a.find('-')], a[a.find('-')+1:])
-    
+                if((a[a.find('-t-')+1:]).lower() in pronoms):
+                    return (a[0:a.find('-')], a[a.find('-')+1:])
     return None
-
+    
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
@@ -68,7 +70,7 @@ def append_deuxieme(piste_sujet, v):
             piste_sujet.append('tu')
         elif 'p' in v:
             piste_sujet.append('vous')
-    
+
     return piste_sujet
 
 
@@ -84,7 +86,7 @@ def append_troisieme(piste_sujet, v):
         elif 'p' in v:
             piste_sujet.append('ils')
             piste_sujet.append('elles')
-    
+
     return piste_sujet
 
 
@@ -93,7 +95,7 @@ def traitement_forme_verbale(dico_key):
     for (k, v) in dico_key.items():
         if v == 'Nom':
             continue
-        
+
         piste_sujet = append_premiere(piste_sujet, v)
 
         piste_sujet = append_deuxieme(piste_sujet, v)
@@ -114,24 +116,24 @@ def search_sujet_nom_propre(dico_key):
         #et s'il possède une majuscule
         if 'Verbe' in tab_stock[i][1] and tab_stock[i-1][0][0].isupper() and 's3' in tab_stock[i][1]:
             dico_key[tab_stock[i-1][0]] = 'Nom propre sujet'
-    
+
     return dico_key
 
 
 def search_sujet(dico_key, piste_sujet):
     piste_sujet = list(set(piste_sujet))
-    for pronom in piste_sujet:   
+    for pronom in piste_sujet:
         if pronom == balise_3s:
             dico_key = search_sujet_nom_propre(dico_key)
             continue
-        
-        for mot, categorie in dico_key.items(): 
+
+        for mot, categorie in dico_key.items():
             #if 'Verbe' not in categorie:
             if mot.lower() == pronom:
                 dico_key[mot] = 'Sujet'
             #else:
             #    break
-    
+
     return dico_key
 
 def search_nom_propre(dico_key):
@@ -140,7 +142,7 @@ def search_nom_propre(dico_key):
         if premier_mot:
             premier_mot = False
             continue
-        
+
         if categorie == 'Nom' and mot[0].isupper():
             dico_key[mot] = 'Nom Propre'
 
@@ -151,10 +153,10 @@ def lever_ambiguite_det(dico_key):
     was = False
 
     for determinant in fd:
-        for mot, categorie in dico_key.items(): 
+        for mot, categorie in dico_key.items():
             if 'Verbe' in categorie and was and categorie != 'Verbe Infinitif':
                 dico_key[mot] = 'Nom'
-            
+
             was = False
 
             if mot == determinant.rstrip():
