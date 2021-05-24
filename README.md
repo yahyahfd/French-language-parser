@@ -4,8 +4,7 @@
 
 #### **Présentation de la problématique**
   Nous avons choisi de traiter le sujet de la représentation de la langue, c'est-à-dire la création d'un programme qui permet de dinstinguer le sujet du verbe et de détecter certains autres éléments dans une phrase donnée. Nous avions le choix entre la langue française et la langue anglaise, et nous avons finis par choisir la première, par soucis de compléxité de la seconde à cause des verbes irréguliers entre autres.
-  choix 1 : tout programmer tout seuls --> assez simple sujet et complément des truc assez simple
-  choix 2 :utiliser  la librairie --> vérifier
+
 #### **Solutions possibles**
   Deux choix nous ont été offert de nouveau :
   * Soit on programme tout par nous-même et donc détecter sujet, verbe et complément de façon basique (on ne peut pas lever toutes les ambiguïtés)
