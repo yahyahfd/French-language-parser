@@ -2,25 +2,25 @@
 import parser
 import re
 
-#Balise pour détecter lorsque qu'un verbe est conjugué à la 3ème personne du singulier 
+#Balise pour détecter lorsque qu'un verbe est conjugué à la 3ème personne du singulier
 balise_3s = '3s'
 
-def comp_dico(dico_tuple, treatment, mot):
+def comp_dico(dico_key, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
     #Pour comprendre comment treatment[-1] est utilisé, regarder le pdf sur lefff
     if treatment[0] == mot.lower():
         if 'W' in treatment[-1]:
-            return (mot, 'Verbe Infinitif')
-        elif 'Verbe' in dico_tuple[1]:
-            return (mot, dico_tuple[1] + treatment[-1])
+            dico_key[mot] = 'Verbe Infinitif'
+        elif 'Verbe' in dico_key[mot]:
+            dico_key[mot] = dico_key[mot] + treatment[-1]
         else:
-            return (mot, 'Verbe' + ' ' + treatment[-1])
-    
-    return None
+            dico_key[mot] = 'Verbe' + ' ' + treatment[-1]
+
+    return dico_key
 
 #recherche les verbes dans une phrase
 def search_verbe(tab):
-    dico_tuple = tab
+    dico_key = tab
     fd_dico = open('lefff-verbs.txt')
 
     #itération du fichier conjugaison (terminaisons des verbes)
@@ -29,28 +29,28 @@ def search_verbe(tab):
             continue
         else:
             #itération du dict (phrase en input splitted via ' ')
-            for i in range(len(dico_tuple)):
+            for mot, categorie in dico_key.items():
                 treatment = line.rstrip().split('\t')
-                tmp = comp_dico(dico_tuple[i], treatment, dico_tuple[i][0])
-                if tmp != None:
-                    dico_tuple[i] = tmp
+                dico_key = comp_dico(dico_key, treatment, mot)
                 '''nopunc = mot.strip(punc)
                 dico = comp_terminaison(dico, treatment, nopunc)'''
-    
-    return dico_tuple
+
+    return dico_key
 
 
 # On ne traite pas des paragraphes ici: text est une phrase, et donc le "?" est le dernier caractère
 # Renvoie le verbe et le sujet dans une phrase intérrogative simple (simple = 1 verbe, sujet max)
 def is_question(text):
     res = parser.parse_ligne(text)
+    pronoms = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
     for a in res:
         if '-' in a:
             if '-t-' in a:
-                return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
+                if((a[a.find('-t-')+3:]).lower() in pronoms):
+                    return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                return (a[0:a.find('-')], a[a.find('-')+1:])
-    
+                if((a[a.find('-')+1:]).lower() in pronoms):
+                    return (a[0:a.find('-')], a[a.find('-')+1:])
     return None
 
 
@@ -71,7 +71,7 @@ def append_deuxieme(piste_sujet, v):
             piste_sujet.append('tu')
         elif 'p' in v:
             piste_sujet.append('vous')
-    
+
     return piste_sujet
 
 
@@ -89,7 +89,7 @@ def append_troisieme(piste_sujet, v):
         elif 'p' in v:
             piste_sujet.append('ils')
             piste_sujet.append('elles')
-    
+
     return piste_sujet
 
 
