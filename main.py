@@ -1,12 +1,14 @@
 import parser
 import interpreteur
 
-def print_dico(dico):
-    for k, v in dico.items():
+# affiche le résultat de la représentation de la phrase
+def print_dico_tuple(dico):
+    for (k, v) in dico:
         if 'Verbe' in v and v != 'Verbe Infinitif':
             print(k + ' ' + v.split(' ')[0])
         else:
             print(k + ' ' + v)
+
 
 def adapte_tirets(tab):
     res = []
@@ -20,25 +22,32 @@ def adapte_tirets(tab):
     
     return res
 
+# organise la représentation de la phrase pour les questions interrogatives 
+# (fonctionne uniquement sur les phrases simples)
 def cas_question(phrase, tab):
     decoupe = adapte_tirets(tab)
     parsing = parser.init_dico(decoupe)
 
     res = interpreteur.is_question(phrase)
 
+    if res == None:
+        print("Une erreur s'est produite durant l'analyse de la phrase")
+        return None
+    
     parcourt = 0
-    for mot, categorie in parsing.items():
-        if parcourt < len(res) and mot == res[parcourt]:
+    for i in range(len(parsing)):
+        # cas - et -t- ex : voulez-vous... ou a-t-il...
+        if parcourt < len(res) and parsing[i][0] == res[parcourt]:
             if parcourt == 0:
-                parsing[mot] = 'Verbe'
+                parsing[i] = (parsing[i][0], 'Verbe')
             elif (len(res) == 2 and parcourt == 1) or (len(res) == 3 and parcourt == 2):
-                parsing[mot] = 'Sujet'
+                parsing[i] = (parsing[i][0], 'Sujet')
             else:
-                parsing[mot] = 'Pronom'
+                parsing[i] = (parsing[i][0], 'Pronom')
             parcourt = parcourt + 1
     
-    parsing['?'] = 'Ponctuation'
-    print_dico(parsing)
+    parsing.append(('?', 'Ponctuation'))
+    print_dico_tuple(parsing)
 
 if __name__ == "__main__":
     phrase = input("Veuillez entrer une phrase à parser : ")
@@ -56,4 +65,4 @@ if __name__ == "__main__":
         res = interpreteur.lever_ambiguite_det(res)
         res = interpreteur.search_nom_propre(res)
         
-        print_dico(res)
+        print_dico_tuple(res)
