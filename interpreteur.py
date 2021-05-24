@@ -55,7 +55,6 @@ def is_question(text):
                     return (a[0:a.find('-')], a[a.find('-')+1:])
     return None
 
-print(is_question("Que voulez-vous savoir sur le monde?"))
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
