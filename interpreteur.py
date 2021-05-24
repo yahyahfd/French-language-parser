@@ -8,7 +8,7 @@ balise_3s = '3s'
 def comp_dico(dico_tuple, treatment, mot):
     #obselete if treatment in mot and mot[len(mot)-len(treatment):len(mot):1] == treatment:
     #Pour comprendre comment treatment[-1] est utilisé, regarder le pdf sur lefff
-    if treatment[0] == mot:
+    if treatment[0] == mot.lower():
         if 'W' in treatment[-1]:
             return (mot, 'Verbe Infinitif')
         elif 'Verbe' in dico_tuple[1]:
@@ -143,7 +143,7 @@ def search_nom_propre(dico_tuple):
             premier_mot = False
             continue
         
-        if dico_tuple[i][1] == 'Nom' and dico_tuple[i][0][0].isupper():
+        if dico_tuple[i][1] == 'Nom' and dico_tuple[i][0][0].isupper() and not dico_tuple[i][0].isupper():
             dico_tuple[i] = (dico_tuple[i][0], 'Nom Propre')
 
     return dico_tuple
