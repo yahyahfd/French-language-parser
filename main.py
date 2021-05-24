@@ -30,6 +30,10 @@ def cas_question(phrase, tab):
 
     res = interpreteur.is_question(phrase)
 
+    if res == None:
+        print("Une erreur s'est produite durant l'analyse de la phrase")
+        return None
+    
     parcourt = 0
     for i in range(len(parsing)):
         # cas - et -t- ex : voulez-vous... ou a-t-il...

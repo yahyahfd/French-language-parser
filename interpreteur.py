@@ -44,12 +44,15 @@ def search_verbe(tab):
 # Renvoie le verbe et le sujet dans une phrase intérrogative simple (simple = 1 verbe, sujet max)
 def is_question(text):
     res = parser.parse_ligne(text)
+    pronoms = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
     for a in res:
         if '-' in a:
             if '-t-' in a:
-                return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
+                if((a[a.find('-t-')+3:]).lower() in pronoms):
+                    return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                return (a[0:a.find('-')], a[a.find('-')+1:])
+                if((a[a.find('-')+1:]).lower() in pronoms):
+                    return (a[0:a.find('-')], a[a.find('-')+1:])
     
     return None
 
