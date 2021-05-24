@@ -51,10 +51,11 @@ def is_question(text):
                 if((a[a.find('-t-')+3:]).lower() in pronoms):
                     return (a[0:a.find('-t-')], 't', a[a.find('-t-')+3:])
             else:
-                if((a[a.find('-t-')+1:]).lower() in pronoms):
+                if((a[a.find('-')+1:]).lower() in pronoms):
                     return (a[0:a.find('-')], a[a.find('-')+1:])
     return None
-    
+
+print(is_question("Que voulez-vous savoir sur le monde?"))
 def append_premiere(piste_sujet, v):
     if '1' in v:
         if 's' in v:
