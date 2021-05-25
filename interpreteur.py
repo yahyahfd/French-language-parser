@@ -21,7 +21,7 @@ def comp_dico(dico_tuple, treatment, mot):
 #recherche les verbes dans une phrase
 def search_verbe(tab):
     dico_tuple = tab
-    fd_dico = open('lefff-verbs.txt')
+    fd_dico = open('ressources/lefff-verbs.txt')
 
     #itération du fichier conjugaison (terminaisons des verbes)
     for line in fd_dico:
@@ -154,7 +154,7 @@ def search_nom_propre(dico_tuple):
 
 # Lève les ambiguités des verbes quand ils sont précédés par un déterminant
 def lever_ambiguite_det(dico_tuple):
-    fd = open('determinants.txt')
+    fd = open('ressources/determinants.txt')
     # indique si le mot précédent était déterminant ou non
     etait_det = False
 
